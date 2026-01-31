@@ -257,8 +257,8 @@
 					</label>
 				</div>
 			</div>
-			<div class="group">
-				<h3>Render</h3>
+				<div class="group">
+					<h3>Render</h3>
 				<div class="row">
 					<label>
 						Module Size
@@ -279,26 +279,60 @@
 						<input id="lightColor" type="text" value="#ffffff" />
 					</label>
 				</div>
-				<div class="row">
+					<div class="row">
+						<label>
+							XML Declaration
+							<select id="xmlDeclaration">
+								<option value="false" selected>false</option>
+								<option value="true">true</option>
+							</select>
+						</label>
+						<label>
+							ViewBox
+							<select id="viewBox">
+								<option value="true" selected>true</option>
+								<option value="false">false</option>
+							</select>
+						</label>
+					</div>
+					<div class="row">
+						<label>
+							Renderer
+							<select id="renderer">
+								<option value="classic" selected>classic</option>
+								<option value="diamond">diamond</option>
+							</select>
+						</label>
+						<label>
+							Grouping
+							<select id="grouping">
+								<option value="row" selected>row</option>
+								<option value="col">col</option>
+								<option value="dot">dot</option>
+								<option value="45">45</option>
+								<option value="-45">-45</option>
+							</select>
+						</label>
+					</div>
+					<div class="row">
+						<label>
+							Module Shape
+							<select id="moduleShape">
+								<option value="square" selected>square</option>
+								<option value="rounded">rounded</option>
+								<option value="circle">circle</option>
+								<option value="pill">pill</option>
+							</select>
+						</label>
+						<label>
+							Rotate (deg)
+							<input id="rotate" type="range" min="0" max="90" value="45" />
+						</label>
+					</div>
 					<label>
-						XML Declaration
-						<select id="xmlDeclaration">
-							<option value="false" selected>false</option>
-							<option value="true">true</option>
-						</select>
+						Corner Radius
+						<input id="cornerRadius" type="range" min="0" max="6" value="0" />
 					</label>
-					<label>
-						ViewBox
-						<select id="viewBox">
-							<option value="true" selected>true</option>
-							<option value="false">false</option>
-						</select>
-					</label>
-				</div>
-				<label>
-					Corner Radius
-					<input id="cornerRadius" type="range" min="0" max="6" value="0" />
-				</label>
 				<div class="row">
 					<label>
 						Crisp Edges
@@ -352,27 +386,31 @@
 		import { toSvgString } from "../dist/index.js";
 
 		const $ = (id) => document.getElementById(id);
-		const inputs = [
-			"inputText",
-			"ecc",
-			"mode",
-			"version",
-			"mask",
-			"charset",
-			"quietZone",
-			"strict",
-			"moduleSize",
-			"margin",
-			"darkColor",
-			"lightColor",
-			"xmlDeclaration",
-			"viewBox",
-			"crispEdges",
-			"logoSpace",
-			"cornerRadius",
-			"logoSize",
-			"logoRadius",
-		].map($);
+			const inputs = [
+				"inputText",
+				"ecc",
+				"mode",
+				"version",
+				"mask",
+				"charset",
+				"quietZone",
+				"strict",
+				"moduleSize",
+				"margin",
+				"darkColor",
+				"lightColor",
+				"xmlDeclaration",
+				"viewBox",
+				"crispEdges",
+				"renderer",
+				"grouping",
+				"moduleShape",
+				"rotate",
+				"logoSpace",
+				"cornerRadius",
+				"logoSize",
+				"logoRadius",
+			].map($);
 
 		function numOrAuto(v) {
 			if (v === "" || v === null || v === undefined) return "auto";
@@ -389,16 +427,21 @@
 				charset: $("charset").value,
 				quietZone: Number($("quietZone").value),
 				strict: $("strict").value === "true",
-				render: {
-					moduleSize: Number($("moduleSize").value),
-					margin: Number($("margin").value),
-					darkColor: $("darkColor").value,
-					lightColor: $("lightColor").value,
-					xmlDeclaration: $("xmlDeclaration").value === "true",
-					viewBox: $("viewBox").value === "true",
-					crispEdges: $("crispEdges").value === "true",
-				},
-			});
+					render: {
+						moduleSize: Number($("moduleSize").value),
+						margin: Number($("margin").value),
+						darkColor: $("darkColor").value,
+						lightColor: $("lightColor").value,
+						xmlDeclaration: $("xmlDeclaration").value === "true",
+						viewBox: $("viewBox").value === "true",
+						crispEdges: $("crispEdges").value === "true",
+						renderer: $("renderer").value,
+						grouping: $("grouping").value,
+						moduleShape: $("moduleShape").value,
+						rotate: Number($("rotate").value),
+						rx: Number($("cornerRadius").value),
+					},
+				});
 
 			let finalSvg = svg;
 			updateLogoLimits();

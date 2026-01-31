@@ -25,11 +25,7 @@
 	],
 	"author": "goker <goker@kodkafa.com>",
 	"license": "MIT",
-	"files": [
-		"dist",
-		"README.md",
-		"LICENSE"
-	],
+	"files": ["dist", "README.md", "LICENSE"],
 	"sideEffects": false,
 	"scripts": {
 		"build": "tsc",

@@ -49,6 +49,35 @@ export interface RenderSvgOptions {
 	 * @default true
 	 */
 	crispEdges?: boolean;
+
+	/**
+	 * Renderer style.
+	 * @default "classic"
+	 */
+	renderer?: "classic" | "diamond";
+
+	/**
+	 * Grouping strategy for non-classic renderers.
+	 * @default "row"
+	 */
+	grouping?: "row" | "col" | "dot" | "45" | "-45";
+
+	/**
+	 * Module shape for dot/grouped rendering.
+	 * @default "square"
+	 */
+	moduleShape?: "square" | "rounded" | "circle" | "pill";
+
+	/**
+	 * Rotation in degrees (diamond preset uses 45).
+	 * @default 45 for diamond, 0 otherwise
+	 */
+	rotate?: number;
+
+	/**
+	 * Corner radius in pixels for rounded modules.
+	 */
+	rx?: number;
 }
 
 export interface ToSvgStringOptions {
