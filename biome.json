@@ -1,0 +1,9 @@
+{
+	"$schema": "https://biomejs.dev/schemas/1.5.0/schema.json",
+	"files": {
+		"ignore": ["dist/**", "node_modules/**", "test.svg"]
+	},
+	"formatter": {
+		"indentStyle": "tab"
+	}
+}
