@@ -28,7 +28,7 @@
 		"build": "tsc",
 		"postinstall": "patch-package",
 		"prepublishOnly": "npm run build",
-		"test": "vitest",
+		"test": "vitest --config vitest.config.mjs",
 		"lint": "biome check ."
 	},
 	"dependencies": {
