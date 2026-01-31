@@ -17,7 +17,7 @@ export default defineConfig({
 			},
 		],
 	},
-	test: {
+	server: {
 		deps: {
 			inline: ["qr-core"],
 		},
