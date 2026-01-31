@@ -1,0 +1,13 @@
+diff --git a/node_modules/qr-core/package.json b/node_modules/qr-core/package.json
+index 1be04d9..e1d10c9 100644
+--- a/node_modules/qr-core/package.json
++++ b/node_modules/qr-core/package.json
+@@ -8,6 +8,7 @@
+   "types": "./dist/src/index.d.ts",
+   "exports": {
+     ".": {
++      "import": "./dist/src/index.js",
+       "types": "./dist/src/index.d.ts",
+       "default": "./dist/src/index.js"
+     }
+   },
