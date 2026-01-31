@@ -1,8 +1,8 @@
-# qr-code
+# @goker/qr-code
 
 **Minimal SVG Output Library (Powered by `qr-core`)**
 
-`qr-code` is a lightweight, zero-dependency (other than `qr-core`) library for generating QR codes directly as SVG strings. It is designed to be:
+`@goker/qr-code` is a lightweight, zero-dependency (other than `qr-core`) library for generating QR codes directly as SVG strings. It is designed to be:
 
 -   **Deterministic**: Same input + options = byte-identical output.
 -   **Universal**: Works in Node.js, Browsers, Edge Runtimes, and Cloudflare Workers (no DOM/Canvas required).
@@ -12,7 +12,7 @@
 ## Installation
 
 ```bash
-npm install qr-code
+npm install @goker/qr-code
 ```
 
 ## Usage
@@ -22,7 +22,7 @@ npm install qr-code
 Use `toSvgString` to encode text and get an SVG string in one step:
 
 ```typescript
-import { toSvgString } from "qr-code";
+import { toSvgString } from "@goker/qr-code";
 
 const svg = toSvgString("https://example.com", {
   // Encoding Options (passed to qr-core)
@@ -50,7 +50,7 @@ If you already have a `qr-core` object (or any compatible `QrLike` structure), y
 
 ```typescript
 import { encode } from "qr-core";
-import { renderSvg } from "qr-code";
+import { renderSvg } from "@goker/qr-code";
 
 // 1. Encode separately
 const qr = encode("https://example.com", { ecc: "H" });
@@ -96,3 +96,21 @@ Renders an existing QR matrix to an SVG string.
 ## License
 
 MIT
+
+## Testing
+
+QR output is cross-checked against Nayuki's QR Code generator (typescript-javascript) to validate matrix correctness.
+
+## Demo
+
+Live demo is available under `demo/index.html`.
+
+Instructions:
+
+```bash
+npm install
+npm run build
+npx serve .
+```
+
+Then open `http://localhost:3000/demo/` in your browser.

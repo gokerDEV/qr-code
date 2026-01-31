@@ -12,9 +12,16 @@ if (!fs.existsSync(pkgPath)) {
 const raw = fs.readFileSync(pkgPath, "utf8");
 const pkg = JSON.parse(raw);
 
+const indexJs = "./dist/index.js";
+const indexDts = "./dist/index.d.ts";
+
+pkg.main = indexJs;
+pkg.types = indexDts;
+
 const exportsRoot = pkg.exports?.["."] ?? {};
-if (!exportsRoot.import) {
-	exportsRoot.import = "./dist/src/index.js";
-	pkg.exports = { ...pkg.exports, ".": exportsRoot };
-	fs.writeFileSync(pkgPath, `${JSON.stringify(pkg, null, 2)}\n`, "utf8");
-}
+exportsRoot.import = indexJs;
+exportsRoot.default = indexJs;
+exportsRoot.types = indexDts;
+pkg.exports = { ...pkg.exports, ".": exportsRoot };
+
+fs.writeFileSync(pkgPath, `${JSON.stringify(pkg, null, 2)}\n`, "utf8");

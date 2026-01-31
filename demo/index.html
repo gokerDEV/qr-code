@@ -1,0 +1,583 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>@goker/qr-code live demo</title>
+	<style>
+		:root {
+			--bg: #0f1115;
+			--panel: #171a21;
+			--text: #e6e8ee;
+			--muted: #9aa2b2;
+			--accent: #3ddc97;
+			--border: #2a2f3a;
+		}
+
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			margin: 0;
+			font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
+				Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+			background: var(--bg);
+			color: var(--text);
+		}
+
+		header {
+			padding: 20px 24px;
+			border-bottom: 1px solid var(--border);
+			display: flex;
+			gap: 16px;
+			align-items: center;
+			justify-content: space-between;
+		}
+
+		header h1 {
+			margin: 0;
+			font-size: 18px;
+			letter-spacing: 0.3px;
+		}
+
+		main {
+			display: grid;
+			grid-template-columns: 360px 1fr;
+			gap: 16px;
+			padding: 16px;
+			min-height: calc(100vh - 64px);
+		}
+
+		.panel {
+			background: var(--panel);
+			border: 1px solid var(--border);
+			border-radius: 12px;
+			padding: 16px;
+		}
+
+		.group {
+			margin-bottom: 16px;
+		}
+
+		.group h3 {
+			margin: 0 0 8px;
+			font-size: 13px;
+			color: var(--muted);
+			text-transform: uppercase;
+			letter-spacing: 0.08em;
+		}
+
+		label {
+			display: flex;
+			flex-direction: column;
+			gap: 6px;
+			margin-bottom: 10px;
+			font-size: 13px;
+		}
+
+		input[type="text"],
+		input[type="number"],
+		select,
+		textarea {
+			background: #0c0e12;
+			color: var(--text);
+			border: 1px solid var(--border);
+			border-radius: 8px;
+			padding: 8px 10px;
+			font-size: 13px;
+		}
+
+		input[type="range"] {
+			width: 100%;
+		}
+
+		.row {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 8px;
+		}
+
+		.preview {
+			display: grid;
+			grid-template-rows: auto 1fr;
+			gap: 12px;
+		}
+
+		#svgWrap {
+			background: #fff;
+			border-radius: 12px;
+			padding: 16px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			min-height: 320px;
+		}
+
+		#svgWrap svg {
+			max-width: 100%;
+			height: auto;
+		}
+
+		#output {
+			min-height: 200px;
+			white-space: pre;
+			font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+				"Liberation Mono", "Courier New", monospace;
+		}
+
+		.badge {
+			padding: 4px 8px;
+			border-radius: 999px;
+			background: rgba(61, 220, 151, 0.15);
+			color: var(--accent);
+			font-size: 12px;
+		}
+
+		.actions {
+			display: flex;
+			gap: 8px;
+			justify-content: flex-end;
+		}
+
+		.button {
+			background: var(--accent);
+			color: #0b0f14;
+			border: 0;
+			border-radius: 8px;
+			padding: 8px 12px;
+			font-size: 13px;
+			cursor: pointer;
+		}
+
+		.output-panel {
+			display: grid;
+			grid-template-rows: auto 1fr;
+			gap: 8px;
+			min-height: 260px;
+		}
+
+		.slider-row {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 8px;
+		}
+
+		.disabled {
+			opacity: 0.5;
+			pointer-events: none;
+		}
+
+		#output {
+			width: 100%;
+			height: 100%;
+		}
+
+		.helper {
+			font-size: 12px;
+			color: var(--muted);
+			margin-top: 4px;
+		}
+
+		.helper.error {
+			color: #ff6b6b;
+		}
+
+		@media (max-width: 960px) {
+			main {
+				grid-template-columns: 1fr;
+			}
+		}
+	</style>
+</head>
+
+<body>
+	<header>
+		<h1>@goker/qr-code live demo</h1>
+	</header>
+	<main>
+		<section class="panel">
+			<div class="group">
+				<h3>Input</h3>
+				<label>
+					Text / URL
+					<textarea id="inputText" rows="3">https://goker.me/?qr-code</textarea>
+				</label>
+				<div class="helper" id="charInfo"></div>
+			</div>
+			<div class="group">
+				<h3>Encoding</h3>
+				<div class="row">
+					<label>
+						ECC
+						<select id="ecc">
+							<option value="L">L</option>
+							<option value="M" selected>M</option>
+							<option value="Q">Q</option>
+							<option value="H">H</option>
+						</select>
+					</label>
+					<label>
+						Mode
+						<select id="mode">
+							<option value="auto" selected>auto</option>
+							<option value="byte">byte</option>
+							<option value="alphanumeric">alphanumeric</option>
+							<option value="numeric">numeric</option>
+						</select>
+					</label>
+				</div>
+				<label>
+					Version
+					<input id="version" type="range" min="1" max="40" value="3" />
+				</label>
+				<label>
+					Mask
+					<input id="mask" type="range" min="0" max="7" value="2" />
+				</label>
+				<label>
+					Quiet Zone
+					<input id="quietZone" type="range" min="0" max="16" value="4" />
+				</label>
+				<div class="row">
+					<label>
+						Charset
+						<select id="charset">
+							<option value="utf-8" selected>utf-8</option>
+							<option value="iso-8859-1">iso-8859-1</option>
+						</select>
+					</label>
+					<label>
+						Strict
+						<select id="strict">
+							<option value="true">true</option>
+							<option value="false" selected>false</option>
+						</select>
+					</label>
+				</div>
+			</div>
+			<div class="group">
+				<h3>Render</h3>
+				<div class="row">
+					<label>
+						Module Size
+						<input id="moduleSize" type="range" min="2" max="20" value="10" />
+					</label>
+					<label>
+						Margin
+						<input id="margin" type="range" min="0" max="16" value="4" />
+					</label>
+				</div>
+				<div class="row">
+					<label>
+						Dark Color
+						<input id="darkColor" type="text" value="#000000" />
+					</label>
+					<label>
+						Light Color
+						<input id="lightColor" type="text" value="#ffffff" />
+					</label>
+				</div>
+				<div class="row">
+					<label>
+						XML Declaration
+						<select id="xmlDeclaration">
+							<option value="false" selected>false</option>
+							<option value="true">true</option>
+						</select>
+					</label>
+					<label>
+						ViewBox
+						<select id="viewBox">
+							<option value="true" selected>true</option>
+							<option value="false">false</option>
+						</select>
+					</label>
+				</div>
+				<label>
+					Corner Radius
+					<input id="cornerRadius" type="range" min="0" max="6" value="0" />
+				</label>
+				<div class="row">
+					<label>
+						Crisp Edges
+						<select id="crispEdges">
+							<option value="true" selected>true</option>
+							<option value="false">false</option>
+						</select>
+					</label>
+					<label>
+						Logo Space
+						<select id="logoSpace">
+							<option value="false" selected>false</option>
+							<option value="true">true</option>
+						</select>
+					</label>
+				</div>
+				<div class="slider-row" id="logoControls">
+					<label>
+						Logo Size (%)
+						<input id="logoSize" type="range" min="10" max="40" value="22" />
+					</label>
+					<label>
+						Logo Radius
+						<input id="logoRadius" type="range" min="0" max="16" value="0" />
+					</label>
+				</div>
+			</div>
+		</section>
+		<section class="preview">
+			<div class="panel" id="svgWrap"></div>
+			<div class="panel output-panel">
+				<div style="display: flex; align-items: center; justify-content: space-between">
+					<h3 style="margin: 0; font-size: 13px; color: var(--muted)">SVG Output</h3>
+					<div class="actions">
+						<button class="button" id="downloadSvg">Download SVG</button>
+					</div>
+				</div>
+				<textarea id="output" readonly></textarea>
+			</div>
+		</section>
+	</main>
+
+	<script type="importmap">
+			{
+				"imports": {
+					"qr-core": "https://cdn.jsdelivr.net/npm/qr-core@1.0.1/dist/index.js"
+				}
+			}
+		</script>
+	<script type="module">
+		import { toSvgString } from "../dist/index.js";
+
+		const $ = (id) => document.getElementById(id);
+		const inputs = [
+			"inputText",
+			"ecc",
+			"mode",
+			"version",
+			"mask",
+			"charset",
+			"quietZone",
+			"strict",
+			"moduleSize",
+			"margin",
+			"darkColor",
+			"lightColor",
+			"xmlDeclaration",
+			"viewBox",
+			"crispEdges",
+			"logoSpace",
+			"cornerRadius",
+			"logoSize",
+			"logoRadius",
+		].map($);
+
+		function numOrAuto(v) {
+			if (v === "" || v === null || v === undefined) return "auto";
+			const n = Number(v);
+			return Number.isNaN(n) ? "auto" : n;
+		}
+
+		function render() {
+			const svg = toSvgString($("inputText").value, {
+				ecc: $("ecc").value,
+				mode: $("mode").value,
+				version: Number($("version").value),
+				mask: Number($("mask").value),
+				charset: $("charset").value,
+				quietZone: Number($("quietZone").value),
+				strict: $("strict").value === "true",
+				render: {
+					moduleSize: Number($("moduleSize").value),
+					margin: Number($("margin").value),
+					darkColor: $("darkColor").value,
+					lightColor: $("lightColor").value,
+					xmlDeclaration: $("xmlDeclaration").value === "true",
+					viewBox: $("viewBox").value === "true",
+					crispEdges: $("crispEdges").value === "true",
+				},
+			});
+
+			let finalSvg = svg;
+			updateLogoLimits();
+			updateCornerLimits();
+
+
+
+
+			const logoEnabled = $("logoSpace").value === "true";
+			if (logoEnabled) {
+				const match = /width="(\d+)"\s+height="(\d+)"/.exec(svg);
+				const size = match ? Number(match[1]) : 0;
+				if (size > 0) {
+					const logoSize = Math.round(size * (Number($("logoSize").value) / 100));
+					const x = Math.round((size - logoSize) / 2);
+					const y = Math.round((size - logoSize) / 2);
+					const rawFill = $("lightColor").value || "#fff";
+					const fill = rawFill === "transparent" ? "#ffffff" : rawFill;
+					const r = Number($("logoRadius").value);
+					const rect = `  <rect data-logo-space="true" x="${x}" y="${y}" width="${logoSize}" height="${logoSize}" fill="${fill}" rx="${r}" ry="${r}"/>\\n`;
+					finalSvg = svg.replace("</svg>", `${rect}</svg>`);
+				}
+			}
+
+			const radius = Number($("cornerRadius").value);
+			if (radius > 0) {
+				finalSvg = finalSvg.replace(
+					/<rect (?![^>]*data-logo-space="true")/g,
+					`<rect rx="${radius}" ry="${radius}" `,
+				);
+			}
+
+			updateCharInfo();
+
+			if (state.overLimit) {
+				$("svgWrap").innerHTML = "";
+				$("output").value = "";
+				return;
+			}
+
+			$("svgWrap").innerHTML = finalSvg;
+			$("output").value = finalSvg;
+		}
+
+		let timer;
+		function schedule() {
+			clearTimeout(timer);
+			timer = setTimeout(render, 50);
+		}
+
+		inputs.forEach((el) => el.addEventListener("input", schedule));
+		inputs.forEach((el) => el.addEventListener("change", schedule));
+
+		$("downloadSvg").addEventListener("click", () => {
+			const blob = new Blob([$("output").value], { type: "image/svg+xml" });
+			const url = URL.createObjectURL(blob);
+			const a = document.createElement("a");
+			a.href = url;
+			a.download = "qr.svg";
+			a.click();
+			URL.revokeObjectURL(url);
+		});
+
+		function sampleForMode(mode, length) {
+			if (mode === "numeric") return "1".repeat(length);
+			if (mode === "alphanumeric") return "A".repeat(length);
+			return "a".repeat(length);
+		}
+
+		function canEncode(len) {
+			try {
+				toSvgString(sampleForMode($("mode").value, len), {
+					ecc: $("ecc").value,
+					mode: $("mode").value,
+					version: Number($("version").value),
+					mask: Number($("mask").value),
+					charset: $("charset").value,
+					quietZone: Number($("quietZone").value),
+					strict: true,
+					render: {
+						moduleSize: 2,
+						margin: 0,
+						darkColor: "#000",
+						lightColor: "#fff",
+						viewBox: false,
+						crispEdges: false,
+					},
+				});
+				return true;
+			} catch {
+				return false;
+			}
+		}
+
+		function computeMaxChars() {
+			let low = 0;
+			let high = 4000;
+			while (low < high) {
+				const mid = Math.floor((low + high + 1) / 2);
+				if (canEncode(mid)) {
+					low = mid;
+				} else {
+					high = mid - 1;
+				}
+			}
+			return low;
+		}
+
+		let charInfoCache = { key: "", value: 0 };
+		let state = { overLimit: false };
+		function updateCharInfo() {
+			const key = [
+				$("mode").value,
+				$("ecc").value,
+				$("version").value,
+				$("mask").value,
+				$("charset").value,
+			].join("|");
+			if (charInfoCache.key !== key) {
+				charInfoCache = { key, value: computeMaxChars() };
+			}
+			const currentLen = $("inputText").value.length;
+			const info = $("charInfo");
+			state.overLimit = currentLen > charInfoCache.value;
+			info.textContent = `Length: ${currentLen} / Max (probe): ${charInfoCache.value}`;
+			info.classList.toggle("error", state.overLimit);
+			if (state.overLimit) {
+				info.textContent += " — Increase version or lower ECC.";
+			}
+		}
+
+		function updateLogoControls() {
+			const enabled = $("logoSpace").value === "true";
+			$("logoControls").classList.toggle("disabled", !enabled);
+		}
+
+		function updateCornerLimits() {
+			const moduleSize = Number($("moduleSize").value) || 1;
+			const maxCorner = Math.max(0, Math.floor(moduleSize / 2));
+			const cornerInput = $("cornerRadius");
+			cornerInput.max = String(maxCorner);
+			if (Number(cornerInput.value) > maxCorner) {
+				cornerInput.value = String(maxCorner);
+			}
+		}
+
+		function updateLogoLimits() {
+			const logoSizeInput = $("logoSize");
+			const moduleSize = Number($("moduleSize").value) || 1;
+			const margin = Number($("margin").value) || 0;
+			const version = Number($("version").value);
+			const sizeModules = 21 + (version - 1) * 4;
+			const totalSize = (sizeModules + 2 * margin) * moduleSize;
+			const dataSize = Math.max(0, totalSize - 2 * margin * moduleSize);
+			const maxPercent = Math.max(10, Math.floor((dataSize * 0.3 * 100) / totalSize));
+			logoSizeInput.max = String(maxPercent);
+			if (Number(logoSizeInput.value) > maxPercent) {
+				logoSizeInput.value = String(maxPercent);
+			}
+			const logoSizePx = Math.round(totalSize * (Number(logoSizeInput.value) / 100));
+			const logoRadiusInput = $("logoRadius");
+			const maxLogoRadius = Math.max(0, Math.floor(logoSizePx / 2));
+			logoRadiusInput.max = String(maxLogoRadius);
+			if (Number(logoRadiusInput.value) > maxLogoRadius) {
+				logoRadiusInput.value = String(maxLogoRadius);
+			}
+		}
+
+		$("logoSpace").addEventListener("change", () => {
+			updateLogoControls();
+			schedule();
+		});
+
+		updateLogoControls();
+		updateLogoLimits();
+		updateCornerLimits();
+
+		render();
+	</script>
+</body>
+
+</html>
