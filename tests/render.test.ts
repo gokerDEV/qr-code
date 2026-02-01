@@ -43,11 +43,11 @@ describe("renderSvg", () => {
 		);
 		// Top-left
 		expect(svg).toContain(
-			'<rect x="0" y="0" width="10" height="10" fill="#000"/>',
+			'<path d="M 0 0 L 10 0 L 10 10 L 0 10 Z" fill="#000"/>',
 		);
 		// Top-right
 		expect(svg).toContain(
-			'<rect x="20" y="0" width="10" height="10" fill="#000"/>',
+			'<path d="M 20 0 L 30 0 L 30 10 L 20 10 Z" fill="#000"/>',
 		);
 	});
 
