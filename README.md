@@ -1,13 +1,34 @@
 # @goker/qr-code
 
+[![npm](https://img.shields.io/npm/v/@goker/qr-code?label=npm)](https://www.npmjs.com/package/@goker/qr-code)
+![JSR Version](https://img.shields.io/jsr/v/%40goker/qr-code)
+[![license](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![buy me a coffee](https://img.shields.io/badge/buy%20me%20a%20coffee-support-yellow)](https://www.buymeacoffee.com/goker)
+[![github sponsor](https://img.shields.io/badge/sponsor-github-black)](https://github.com/sponsors/gokerDEV)
+
 **Minimal SVG Output Library (Powered by `qr-core`)**
 
-`@goker/qr-code` is a lightweight, zero-dependency (other than `qr-core`) library for generating QR codes directly as SVG strings. It is designed to be:
-
--   **Deterministic**: Same input + options = byte-identical output.
--   **Universal**: Works in Node.js, Browsers, Edge Runtimes, and Cloudflare Workers (no DOM/Canvas required).
--   **Strict**: Written in TypeScript 5.x with `strict: true` and no `any`.
--   **Optimized**: Merges horizontal modules (runs) into single `<rect>` elements to minimize SVG size.
+<table>
+  <tr>
+    <td valign="top">
+      <p><code>@goker/qr-code</code> is a lightweight, zero-dependency (other than <code>qr-core</code>) library for generating QR codes directly as SVG strings. It is designed to be:</p>
+      <ul>
+        <li><b>Deterministic</b>: Same input + options = byte-identical output.</li>
+        <li><b>Universal</b>: Works in Node.js, Browsers, Edge Runtimes, and Cloudflare Workers (no DOM/Canvas required).</li>
+        <li><b>Strict</b>: Written in TypeScript 5.x with <code>strict: true</code>.</li>
+        <li><b>Optimized</b>: Merges adjacent modules into single path elements to minimize SVG size (in standard modes).</li>
+      </ul>
+    </td>
+    <td valign="top">
+      <div align="center">
+        <img src="./qr.svg" alt="QR Code" width="200" />
+        <br />
+        <br />
+        <p>It supports <a href="./DIAMOND.md">diamond shape rendering</a>.</p>
+      </div>
+    </td>
+  </tr>
+</table>
 
 ## Installation
 
@@ -36,7 +57,8 @@ const svg = toSvgString("https://example.com", {
     margin: 4,        // Modules of white space around
     darkColor: "#000000",
     lightColor: "#ffffff",
-    viewBox: true     // Include viewBox attribute
+    viewBox: true,    // Include viewBox attribute
+    cornerRadius: 2   // Round corners
   }
 });
 
@@ -59,7 +81,9 @@ const qr = encode("https://example.com", { ecc: "H" });
 const svg = renderSvg(qr, {
   moduleSize: 4,
   darkColor: "#333",
-  lightColor: "transparent" // Transparent background
+  lightColor: "transparent", // Transparent background
+  grouping: "dot",           // "dot", "row", "col", "blob", "45", "-45"
+  moduleShape: "circle"      // "circle" or "square"
 });
 ```
 
@@ -92,16 +116,29 @@ Renders an existing QR matrix to an SVG string.
 | `xmlDeclaration` | `boolean` | `false` | Prepend `<?xml ...?>` tag. |
 | `viewBox` | `boolean` | `true` | Include `viewBox` attribute on `<svg>`. |
 | `crispEdges` | `boolean` | `true` | Add `shape-rendering="crispEdges"`. |
+| `grouping` | `string` | `"row"` | Grouping strategy: `"row"`, `"col"`, `"dot"`, `"blob"`, `"45"`, `"-45"`. |
+| `moduleShape` | `"square" \| "circle"` | `"square"` | Shape of individual modules. |
+| `rotateDeg` | `number` | `0` | Global rotation of the QR code in degrees. |
+| `moduleRotationDeg` | `number` | `0` | Rotation of individual square modules in degrees. |
+| `cornerRadius` | `number` | `0` | Radius for rounding corners of modules/paths. |
 
-## License
+## Contributing
 
-MIT
+### Status & Roadmap
 
-## Testing
+The current implementation has some known deviations from the internal `DIAMOND.md` specification:
+
+1.  **Polygon vs Path**: The library currently uses `<path>` elements for all rendering (including diagonal diamond shapes) instead of `<polygon>` elements. This is done to support corner rounding (filleting) via path commands (`Q`) directly.
+2.  **Trapezoid Shapes**: The strictly defined "trapezoid" shapes for diagonal grouping are not implemented. The current renderer relies on rotated rectangles (parallelograms) and path unions.
+3.  **Optimization**: Horizontal merging is primarily effective in `grouping: "row"` (default). Other grouping modes may produce more complex paths.
+
+
+
+### Testing
 
 QR output is cross-checked against Nayuki's QR Code generator (typescript-javascript) to validate matrix correctness.
 
-## Demo
+### Demo
 
 Live demo is available under `demo/index.html`.
 
@@ -114,3 +151,7 @@ npx serve .
 ```
 
 Then open `http://localhost:3000/demo/` in your browser.
+
+## License
+
+MIT

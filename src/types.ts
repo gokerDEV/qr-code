@@ -57,25 +57,38 @@ export interface RenderSvgOptions {
 	renderer?: "classic" | "diamond";
 
 	/**
-	 * Grouping strategy for non-classic renderers.
+	 * Grouping strategy.
 	 * @default "row"
 	 */
-	grouping?: "row" | "col" | "dot" | "45" | "-45";
+	grouping?: "row" | "col" | "dot" | "blob" | "45" | "-45";
 
 	/**
-	 * Module shape for dot/grouped rendering.
+	 * Module shape.
 	 * @default "square"
 	 */
-	moduleShape?: "square" | "rounded" | "circle" | "pill";
+	moduleShape?: "square" | "circle";
 
 	/**
-	 * Rotation in degrees (diamond preset uses 45).
-	 * @default 45 for diamond, 0 otherwise
+	 * Global rotation in degrees (diamond preset uses 45).
+	 * @default 0
 	 */
-	rotate?: number;
+	rotateDeg?: number;
 
 	/**
-	 * Corner radius in pixels for rounded modules.
+	 * Per-module rotation (square only).
+	 * @default 0
+	 */
+	moduleRotationDeg?: number;
+
+	/**
+	 * Corner radius in pixels.
+	 * @default 0
+	 */
+	cornerRadius?: number;
+
+	/**
+	 * Back-compat: alias for cornerRadius.
+	 * @deprecated
 	 */
 	rx?: number;
 }

@@ -93,11 +93,19 @@
 			width: 100%;
 		}
 
-		.row {
-			display: grid;
-			grid-template-columns: 1fr 1fr;
-			gap: 8px;
-		}
+			.row {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 8px;
+			}
+			.flex-row {
+				display: flex;
+				gap: 8px;
+				align-items: center;
+			}
+			.flex-row > label {
+				flex: 1;
+			}
 
 		.preview {
 			display: grid;
@@ -232,14 +240,16 @@
 					Version
 					<input id="version" type="range" min="1" max="40" value="3" />
 				</label>
-				<label>
-					Mask
-					<input id="mask" type="range" min="0" max="7" value="2" />
-				</label>
-				<label>
-					Quiet Zone
-					<input id="quietZone" type="range" min="0" max="16" value="4" />
-				</label>
+					<div class="row">
+						<label>
+							Mask
+							<input id="mask" type="range" min="0" max="7" value="2" />
+						</label>
+						<label>
+							Quiet Zone
+							<input id="quietZone" type="range" min="0" max="16" value="4" />
+						</label>
+					</div>
 				<div class="row">
 					<label>
 						Charset
@@ -281,34 +291,19 @@
 				</div>
 					<div class="row">
 						<label>
-							XML Declaration
-							<select id="xmlDeclaration">
-								<option value="false" selected>false</option>
-								<option value="true">true</option>
-							</select>
-						</label>
-						<label>
-							ViewBox
-							<select id="viewBox">
-								<option value="true" selected>true</option>
-								<option value="false">false</option>
-							</select>
-						</label>
-					</div>
-					<div class="row">
-						<label>
-							Renderer
-							<select id="renderer">
-								<option value="classic" selected>classic</option>
-								<option value="diamond">diamond</option>
+							Module Shape
+							<select id="moduleShape">
+								<option value="square" selected>square</option>
+								<option value="circle">circle</option>
 							</select>
 						</label>
 						<label>
 							Grouping
 							<select id="grouping">
-								<option value="row" selected>row</option>
+								<option value="row">row</option>
 								<option value="col">col</option>
-								<option value="dot">dot</option>
+								<option value="dot" selected>dot</option>
+								<option value="blob">blob</option>
 								<option value="45">45</option>
 								<option value="-45">-45</option>
 							</select>
@@ -316,49 +311,44 @@
 					</div>
 					<div class="row">
 						<label>
-							Module Shape
-							<select id="moduleShape">
-								<option value="square" selected>square</option>
-								<option value="rounded">rounded</option>
-								<option value="circle">circle</option>
-								<option value="pill">pill</option>
-							</select>
+							Global Rotate (deg)
+							<input id="rotateDeg" type="range" min="0" max="90" step="15" value="45" />
 						</label>
 						<label>
-							Rotate (deg)
-							<input id="rotate" type="range" min="0" max="90" value="45" />
+							Module Rotation (deg)
+							<input id="moduleRotationDeg" type="range" min="0" max="90" step="15" value="60" />
 						</label>
 					</div>
-					<label>
-						Corner Radius
-						<input id="cornerRadius" type="range" min="0" max="6" value="0" />
-					</label>
-				<div class="row">
-					<label>
-						Crisp Edges
-						<select id="crispEdges">
-							<option value="true" selected>true</option>
-							<option value="false">false</option>
-						</select>
-					</label>
-					<label>
-						Logo Space
-						<select id="logoSpace">
-							<option value="false" selected>false</option>
-							<option value="true">true</option>
-						</select>
-					</label>
-				</div>
-				<div class="slider-row" id="logoControls">
-					<label>
-						Logo Size (%)
-						<input id="logoSize" type="range" min="10" max="40" value="22" />
-					</label>
-					<label>
-						Logo Radius
-						<input id="logoRadius" type="range" min="0" max="16" value="0" />
-					</label>
-				</div>
+					<div class="row">
+						<label>
+							Corner Radius
+							<input id="cornerRadius" type="range" min="0" max="6" value="0" />
+						</label>
+						<label>
+							Crisp Edges
+							<select id="crispEdges">
+								<option value="true" selected>true</option>
+								<option value="false">false</option>
+							</select>
+						</label>
+					</div>
+					<div class="group">
+						<h3>Logo Space</h3>
+						<div class="flex-row" id="logoControls">
+							<label style="display: flex; align-items: center; gap: 8px; flex: 0 0 auto">
+								<input id="logoSpace" type="checkbox" />
+								<span>Enable</span>
+							</label>
+							<label>
+								Logo Size (%)
+								<input id="logoSize" type="range" min="10" max="40" value="22" />
+							</label>
+							<label>
+								Logo Radius
+								<input id="logoRadius" type="range" min="0" max="16" value="0" />
+							</label>
+						</div>
+					</div>
 			</div>
 		</section>
 		<section class="preview">
@@ -399,13 +389,11 @@
 				"margin",
 				"darkColor",
 				"lightColor",
-				"xmlDeclaration",
-				"viewBox",
 				"crispEdges",
-				"renderer",
-				"grouping",
 				"moduleShape",
-				"rotate",
+				"grouping",
+				"rotateDeg",
+				"moduleRotationDeg",
 				"logoSpace",
 				"cornerRadius",
 				"logoSize",
@@ -432,14 +420,14 @@
 						margin: Number($("margin").value),
 						darkColor: $("darkColor").value,
 						lightColor: $("lightColor").value,
-						xmlDeclaration: $("xmlDeclaration").value === "true",
-						viewBox: $("viewBox").value === "true",
+						xmlDeclaration: true,
+						viewBox: true,
 						crispEdges: $("crispEdges").value === "true",
-						renderer: $("renderer").value,
 						grouping: $("grouping").value,
 						moduleShape: $("moduleShape").value,
-						rotate: Number($("rotate").value),
-						rx: Number($("cornerRadius").value),
+						rotateDeg: Number($("rotateDeg").value),
+						moduleRotationDeg: Number($("moduleRotationDeg").value),
+						cornerRadius: Number($("cornerRadius").value),
 					},
 				});
 
@@ -450,7 +438,7 @@
 
 
 
-			const logoEnabled = $("logoSpace").value === "true";
+			const logoEnabled = $("logoSpace").checked;
 			if (logoEnabled) {
 				const match = /width="(\d+)"\s+height="(\d+)"/.exec(svg);
 				const size = match ? Number(match[1]) : 0;
@@ -574,8 +562,23 @@
 		}
 
 		function updateLogoControls() {
-			const enabled = $("logoSpace").value === "true";
-			$("logoControls").classList.toggle("disabled", !enabled);
+			const enabled = $("logoSpace").checked;
+			const size = $("logoSize");
+			const radius = $("logoRadius");
+			size.disabled = !enabled;
+			radius.disabled = !enabled;
+			size.parentElement?.classList.toggle("disabled", !enabled);
+			radius.parentElement?.classList.toggle("disabled", !enabled);
+		}
+
+		function updateRotationControls() {
+			const isDot = $("grouping").value === "dot";
+			const moduleRotate = $("moduleRotationDeg");
+			moduleRotate.disabled = !isDot;
+			moduleRotate.parentElement?.classList.toggle("disabled", !isDot);
+			if (!isDot) {
+				moduleRotate.value = "0";
+			}
 		}
 
 		function updateCornerLimits() {
@@ -614,10 +617,15 @@
 			updateLogoControls();
 			schedule();
 		});
+		$("grouping").addEventListener("change", () => {
+			updateRotationControls();
+			schedule();
+		});
 
 		updateLogoControls();
 		updateLogoLimits();
 		updateCornerLimits();
+		updateRotationControls();
 
 		render();
 	</script>
