@@ -5,6 +5,7 @@
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<title>@goker/qr-code live demo</title>
+	<link rel="icon" href="data:;base64,=" />
 	<style>
 		:root {
 			--bg: #0f1115;
@@ -368,7 +369,10 @@
 	<script type="importmap">
 			{
 				"imports": {
-					"qr-core": "https://cdn.jsdelivr.net/npm/qr-core@1.0.1/dist/index.js"
+					"qr-core": "https://cdn.jsdelivr.net/npm/qr-core@1.0.1/dist/index.js",
+					"/dist/types": "/dist/types.js",
+					"/dist/render": "/dist/render.js",
+					"/dist/encode": "/dist/encode.js"
 				}
 			}
 		</script>
