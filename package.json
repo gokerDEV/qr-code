@@ -1,6 +1,6 @@
 {
 	"name": "@goker/qr-code",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"description": "Minimal SVG Output Library (Powered by qr-core)",
 	"type": "module",
 	"main": "./dist/index.js",
@@ -25,11 +25,14 @@
 	],
 	"author": "goker <goker@kodkafa.com>",
 	"license": "MIT",
-	"files": ["dist", "README.md", "LICENSE"],
+	"files": [
+		"dist",
+		"README.md",
+		"LICENSE"
+	],
 	"sideEffects": false,
 	"scripts": {
 		"build": "tsc",
-		"postinstall": "node scripts/patch-qr-core.mjs",
 		"prepublishOnly": "npm run build",
 		"test": "vitest run --config vitest.config.mjs",
 		"lint": "biome check ."
