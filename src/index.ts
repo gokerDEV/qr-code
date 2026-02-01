@@ -1,3 +1,3 @@
-export * from "./types.js";
-export * from "./render.js";
-export * from "./encode.js";
+export * from "./types";
+export * from "./render";
+export * from "./encode";

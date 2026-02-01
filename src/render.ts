@@ -3,7 +3,7 @@ import {
 	type RenderSvgOptions,
 	SvgError,
 	SvgErrorCode,
-} from "./types.js";
+} from "./types";
 
 const DEFAULT_OPTIONS: Required<RenderSvgOptions> = {
 	moduleSize: 4,
@@ -37,14 +37,10 @@ function rotatePoint(p: Point, c: Point, deg: number): Point {
 
 function polygonPath(points: Point[], radius: number): string {
 	if (radius <= 0 || points.length < 3) {
-		return (
-			`M ${points[0].x} ${points[0].y} ` +
-			points
-				.slice(1)
-				.map((p) => `L ${p.x} ${p.y}`)
-				.join(" ") +
-			" Z"
-		);
+		return `M ${points[0].x} ${points[0].y} ${points
+			.slice(1)
+			.map((p) => `L ${p.x} ${p.y}`)
+			.join(" ")} Z`;
 	}
 	const n = points.length;
 	const path: string[] = [];

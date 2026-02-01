@@ -1,7 +1,6 @@
-import { encode } from "qr-core";
-import type { EncodeOptions } from "qr-core";
-import { renderSvg } from "./render.js";
-import type { ToSvgStringOptions } from "./types.js";
+import { type EncodeOptions, encode } from "qr-core";
+import { renderSvg } from "./render";
+import type { ToSvgStringOptions } from "./types";
 
 export function toSvgString(
 	input: string,

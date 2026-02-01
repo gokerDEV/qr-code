@@ -36,6 +36,12 @@
 npm install @goker/qr-code
 ```
 
+JSR:
+
+```bash
+npx jsr add @goker/qr-code
+```
+
 ## Usage
 
 ### 1. Simple Encode & Render (Recommended)
@@ -124,6 +130,40 @@ Renders an existing QR matrix to an SVG string.
 
 ## Contributing
 
+Thanks for contributing! This project aims to stay lightweight, pure TypeScript, and easy to consume in both Node and browser runtimes.
+
+### Requirements
+
+- Node.js >= 18
+- npm
+
+### Setup
+
+```bash
+npm install
+```
+
+### Development Commands
+
+```bash
+npm run build
+npm test
+npm run lint
+```
+
+### Project Notes
+
+- Source lives in `src/` and must remain framework-agnostic and runtime-neutral.
+- Public API is exported from `src/index.ts`.
+- Keep output deterministic; avoid adding non-deterministic rendering or environment-specific behavior.
+- Keep TypeScript `strict` compatibility.
+
+### Pull Requests
+
+- Prefer small, focused changes.
+- Update docs and tests if behavior changes.
+- Ensure `npm test` and `npm run lint` pass.
+
 ### Status & Roadmap
 
 The current implementation has some known deviations from the internal `DIAMOND.md` specification:
@@ -141,6 +181,8 @@ QR output is cross-checked against Nayuki's QR Code generator (typescript-javasc
 ### Demo
 
 Live demo is available under `demo/index.html`.
+
+![Demo](./demo.png)
 
 Instructions:
 
