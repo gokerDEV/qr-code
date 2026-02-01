@@ -1,6 +1,6 @@
 {
 	"name": "@goker/qr-code",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"description": "Minimal SVG Output Library (Powered by qr-core)",
 	"type": "module",
 	"main": "./dist/index.js",
@@ -48,6 +48,6 @@
 		"node": ">=18"
 	},
 	"dependencies": {
-		"qr-core": "^1.0.3"
+		"qr-core": "^1.0.4"
 	}
 }

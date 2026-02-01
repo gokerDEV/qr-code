@@ -1,3 +1,6 @@
+/**
+ * Minimal QR matrix shape accepted by {@link renderSvg}.
+ */
 export interface QrLike {
 	size: number;
 	matrix: {
@@ -5,6 +8,9 @@ export interface QrLike {
 	};
 }
 
+/**
+ * Rendering configuration for SVG output.
+ */
 export interface RenderSvgOptions {
 	/**
 	 * Module size in pixels.
@@ -93,6 +99,9 @@ export interface RenderSvgOptions {
 	rx?: number;
 }
 
+/**
+ * Options for {@link toSvgString} combining encode + render.
+ */
 export interface ToSvgStringOptions {
 	// Encoding pass-through (QrCoreOptions)
 	ecc?: "L" | "M" | "Q" | "H";
@@ -107,12 +116,18 @@ export interface ToSvgStringOptions {
 	render?: RenderSvgOptions;
 }
 
+/**
+ * Error code identifiers for {@link SvgError}.
+ */
 export enum SvgErrorCode {
 	INVALID_OPTIONS = "INVALID_OPTIONS",
 	INVALID_QR_OBJECT = "INVALID_QR_OBJECT",
 	RENDER_FAILED = "RENDER_FAILED",
 }
 
+/**
+ * Error type thrown by rendering helpers.
+ */
 export class SvgError extends Error {
 	code: SvgErrorCode;
 	details?: unknown;

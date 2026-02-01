@@ -115,6 +115,22 @@ function computeRotatedSize(size: number, deg: number): number {
 	return Math.ceil(size * (absCos + absSin));
 }
 
+/**
+ * Render a pre-encoded QR matrix to an SVG string.
+ *
+ * @param qr - Any object that matches {@link QrLike}.
+ * @param options - Rendering options.
+ * @returns SVG string output.
+ *
+ * @example
+ * ```ts
+ * import { encode } from "qr-core";
+ * import { renderSvg } from "@goker/qr-code";
+ *
+ * const qr = encode("https://example.com");
+ * const svg = renderSvg(qr, { moduleSize: 4, grouping: "dot" });
+ * ```
+ */
 export function renderSvg(qr: QrLike, options: RenderSvgOptions = {}): string {
 	if (
 		!qr ||

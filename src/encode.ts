@@ -2,6 +2,23 @@ import { type EncodeOptions, encode } from "qr-core";
 import { renderSvg } from "./render";
 import type { ToSvgStringOptions } from "./types";
 
+/**
+ * Encode input text and return a complete SVG string.
+ *
+ * @param input - Text or URL to encode.
+ * @param options - Encoding and rendering options.
+ * @returns SVG string output.
+ *
+ * @example
+ * ```ts
+ * import { toSvgString } from "@goker/qr-code";
+ *
+ * const svg = toSvgString("https://example.com", {
+ *   ecc: "M",
+ *   render: { moduleSize: 6, margin: 4 }
+ * });
+ * ```
+ */
 export function toSvgString(
 	input: string,
 	options: ToSvgStringOptions = {},
